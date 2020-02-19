@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import {StyleSheet, SafeAreaView} from 'react-native';
+import React, {useState, useEffect, useRef} from 'react';
+import {StyleSheet, View, Text} from 'react-native';
 import {ECharts} from 'react-native-echarts-wrapper';
 
 function getDefaultOption() {
@@ -56,14 +56,15 @@ const serieOption = {
   barMaxWidth: '20%',
 };
 // data: [[232, 423, 533, 633, 123, 754, 1432, 345, 657]],
-const EChartComponent = ({
+function EChartComponent({
   lowerYLimit,
   upperYLimit,
   legendData = [],
   data = [],
   colors = [],
   selectedX,
-}) => {
+}) {
+  let chartRef = useRef(null);
   const [chartOption, setChartOption] = useState(getDefaultOption());
   useEffect(() => {
     const defaultOption = Object.assign({}, getDefaultOption());
@@ -122,15 +123,35 @@ const EChartComponent = ({
       };
       defaultOption.series.push(markAreaSerie);
     }
-    setChartOption(defaultOption);
+    // if (chartRef) {
+    //   chartRef.setOption(defaultOption);
+    // }
+    setChartOption(Object.assign({}, defaultOption));
   }, [legendData, data, colors, lowerYLimit, upperYLimit, selectedX]);
 
+  useEffect(() => {
+    if (chartRef) {
+      chartRef.setOption(chartOption, {
+        notMerge: true,
+        lazyUpdate: true,
+        silent: true,
+      });
+    }
+  }, [chartOption]);
+
+  const onRef = ref => {
+    if (ref) {
+      chartRef = ref;
+    }
+  };
+  const onData = param => {};
+
   return (
-    <SafeAreaView style={styles.chartContainer}>
-      <ECharts option={chartOption} />
-    </SafeAreaView>
+    <View style={styles.chartContainer}>
+      <ECharts option={chartOption} ref={onRef} onData={onData} />
+    </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   chartContainer: {

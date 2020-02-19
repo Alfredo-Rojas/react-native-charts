@@ -1,5 +1,5 @@
-import React from 'react';
-import {ScrollView, StyleSheet, View, Text} from 'react-native';
+import React, {useState} from 'react';
+import {DatePickerIOS, ScrollView, StyleSheet, View, Text} from 'react-native';
 import EChartComponent from './src/components/echarts/EChartComponent';
 // import {ECharts} from 'native-echarts';
 
@@ -39,7 +39,24 @@ const seriesData = [
   },
 ];
 
+const xAxisArray = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
+
 const App = () => {
+  const [chosenDate, setChosenDate] = useState(new Date());
+  const [selectedX, setSelectedX] = useState(xAxisArray[chosenDate.getMonth()]);
   return (
     <ScrollView>
       <View style={styles.appView}>
@@ -47,12 +64,19 @@ const App = () => {
           <Text style={styles.headerText}>Custom Chart Wrapper</Text>
         </View>
         <View style={styles.dateController}>
-          <Text>Date Control</Text>
+          <DatePickerIOS
+            mode="date"
+            date={chosenDate}
+            onDateChange={newDate => {
+              setChosenDate(newDate);
+              setSelectedX(xAxisArray[newDate.getMonth()]);
+            }}
+          />
         </View>
         <View style={styles.chartContainer}>
           {seriesData.map((serieData, index) => (
             <View key={`serie-${index}`}>
-              <EChartComponent {...serieData} selectedX="Apr" />
+              <EChartComponent {...serieData} selectedX={selectedX} />
             </View>
           ))}
         </View>
@@ -73,7 +97,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   dateController: {
-    padding: 20,
+    flex: 1,
+    justifyContent: 'center',
+    width: '100%',
   },
   chartContainer: {
     width: '100%',
