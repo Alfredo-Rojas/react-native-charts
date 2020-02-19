@@ -57,16 +57,35 @@ const serieOption = {
 };
 // data: [[232, 423, 533, 633, 123, 754, 1432, 345, 657]],
 const EChartComponent = ({
-  lowerYLimit = 0,
-  upperYLimit = 0,
+  lowerYLimit,
+  upperYLimit,
   legendData = [],
   data = [],
   colors = [],
+  selectedX,
 }) => {
   const [chartOption, setChartOption] = useState(getDefaultOption());
   useEffect(() => {
     const defaultOption = Object.assign({}, getDefaultOption());
     defaultOption.legend.data = legendData;
+    defaultOption.xAxis.data = defaultOption.xAxis.data.map(item => {
+      return item !== selectedX
+        ? {
+            value: item,
+          }
+        : {
+            value: item,
+            textStyle: {
+              padding: [0, 5],
+              fontWeight: 'bold',
+              fontSize: 14,
+              backgroundColor: 'rgba(0,0,0,0.5)',
+              rich: {
+                p: {color: '#fff'},
+              },
+            },
+          };
+    });
     defaultOption.series = data.map((item, index) => ({
       ...serieOption,
       data: item,
@@ -75,8 +94,36 @@ const EChartComponent = ({
         color: colors[index] || '#fff',
       },
     }));
+    if (lowerYLimit && upperYLimit) {
+      const markAreaSerie = {
+        name: 'Lower & Upper Limit',
+        type: 'line',
+        itemStyle: {
+          normal: {
+            color: 'rgba(0, 255, 0, 0.12)',
+          },
+        },
+        markArea: {
+          silent: true,
+          data: [
+            [
+              {
+                yAxis: lowerYLimit,
+              },
+              {
+                yAxis: upperYLimit,
+              },
+            ],
+          ],
+          itemStyle: {
+            borderType: 'dashed',
+          },
+        },
+      };
+      defaultOption.series.push(markAreaSerie);
+    }
     setChartOption(defaultOption);
-  }, [legendData, data, colors]);
+  }, [legendData, data, colors, lowerYLimit, upperYLimit, selectedX]);
 
   return (
     <SafeAreaView style={styles.chartContainer}>

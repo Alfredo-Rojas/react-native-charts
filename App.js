@@ -52,7 +52,7 @@ const App = () => {
         <View style={styles.chartContainer}>
           {seriesData.map((serieData, index) => (
             <View key={`serie-${index}`}>
-              <EChartComponent {...serieData} />
+              <EChartComponent {...serieData} selectedX="Apr" />
             </View>
           ))}
         </View>
