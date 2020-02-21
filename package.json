@@ -17,6 +17,7 @@
     "react-native-chart-kit": "^4.5.0",
     "react-native-echarts-wrapper": "^2.0.0",
     "react-native-svg": "^11.0.1",
+    "react-native-swiper": "^1.5.14",
     "react-native-webview": "^8.1.0"
   },
   "devDependencies": {

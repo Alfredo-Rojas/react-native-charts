@@ -59,7 +59,6 @@ const serieOption = {
 function EChartComponent({
   lowerYLimit,
   upperYLimit,
-  legendData = [],
   data = [],
   colors = [],
   selectedX,
@@ -68,6 +67,10 @@ function EChartComponent({
   const [chartOption, setChartOption] = useState(getDefaultOption());
   useEffect(() => {
     const defaultOption = Object.assign({}, getDefaultOption());
+    const selectedIndex = defaultOption.xAxis.data.indexOf(selectedX);
+    const legendData = data.map(
+      (item, index) => `Serie${index} - ${item[selectedIndex]}`,
+    );
     defaultOption.legend.data = legendData;
     defaultOption.xAxis.data = defaultOption.xAxis.data.map(item => {
       return item !== selectedX
@@ -127,7 +130,7 @@ function EChartComponent({
     //   chartRef.setOption(defaultOption);
     // }
     setChartOption(Object.assign({}, defaultOption));
-  }, [legendData, data, colors, lowerYLimit, upperYLimit, selectedX]);
+  }, [data, colors, lowerYLimit, upperYLimit, selectedX]);
 
   useEffect(() => {
     if (chartRef) {

@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
-import {DatePickerIOS, ScrollView, StyleSheet, View, Text} from 'react-native';
+import {ScrollView, StyleSheet, View, Text} from 'react-native';
 import EChartComponent from './src/components/echarts/EChartComponent';
+import Swiper from 'react-native-swiper';
 // import {ECharts} from 'native-echarts';
 
 // import Chart from './src/screens/NativeChartKit';
 
 const seriesData = [
   {
-    legendData: ['1 - Series1', '1 - Series2'],
     colors: ['#ff0000', '#fff'],
     data: [
       [820, 932, 901, 934, 1290, 1330, 1320, 789, 998],
@@ -17,12 +17,10 @@ const seriesData = [
   {
     lowerYLimit: 300,
     upperYLimit: 700,
-    legendData: ['2 - Series1'],
     colors: ['#ff0000'],
     data: [[232, 423, 533, 633, 123, 754, 1432, 345, 657]],
   },
   {
-    legendData: ['3 - Series1', '3 - Series2'],
     colors: ['#ff0000', '#fff'],
     data: [
       [820, 932, 901, 256, 234, 333, 234, 633, 998],
@@ -30,7 +28,6 @@ const seriesData = [
     ],
   },
   {
-    legendData: ['4 - Series1', '4 - Series2'],
     colors: ['#ff0000', '#fff'],
     data: [
       [820, 932, 901, 934, 111, 444, 666, 789, 998],
@@ -49,14 +46,10 @@ const xAxisArray = [
   'Jul',
   'Aug',
   'Sep',
-  'Oct',
-  'Nov',
-  'Dec',
 ];
 
 const App = () => {
-  const [chosenDate, setChosenDate] = useState(new Date());
-  const [selectedX, setSelectedX] = useState(xAxisArray[chosenDate.getMonth()]);
+  const [selectedX, setSelectedX] = useState(xAxisArray[0]);
   return (
     <ScrollView>
       <View style={styles.appView}>
@@ -64,14 +57,27 @@ const App = () => {
           <Text style={styles.headerText}>Custom Chart Wrapper</Text>
         </View>
         <View style={styles.dateController}>
-          <DatePickerIOS
+          {/* <DatePickerIOS
             mode="date"
             date={chosenDate}
             onDateChange={newDate => {
               setChosenDate(newDate);
               setSelectedX(xAxisArray[newDate.getMonth()]);
             }}
-          />
+          /> */}
+          <Swiper
+            style={styles.swiper}
+            title={selectedX}
+            showsButtons={true}
+            snapToAlignment="center"
+            centerContent={true}
+            onIndexChanged={index => setSelectedX(xAxisArray[index])}>
+            {xAxisArray.map((x, idx) => (
+              <View key={`swiper-${idx}`} style={styles.swiperText}>
+                <Text>{x}</Text>
+              </View>
+            ))}
+          </Swiper>
         </View>
         <View style={styles.chartContainer}>
           {seriesData.map((serieData, index) => (
@@ -96,10 +102,17 @@ const styles = StyleSheet.create({
     fontSize: 24,
     textAlign: 'center',
   },
+  swiper: {
+    alignItems: 'center',
+  },
   dateController: {
-    flex: 1,
+    height: 80,
     justifyContent: 'center',
-    width: '100%',
+    // width: '100%',
+  },
+  swiperText: {
+    justifyContent: 'center',
+    width: 100,
   },
   chartContainer: {
     width: '100%',
