@@ -4,6 +4,7 @@ import {ECharts} from 'react-native-echarts-wrapper';
 
 function getDefaultOption() {
   return {
+    animation: false,
     title: {
       text: 'Chart Title',
       textStyle: {
