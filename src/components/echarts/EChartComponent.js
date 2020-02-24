@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, SafeAreaView} from 'react-native';
 import {ECharts} from 'react-native-echarts-wrapper';
 
 function getDefaultOption() {
@@ -65,6 +65,7 @@ function EChartComponent({
   selectedX,
 }) {
   let chartRef = useRef(null);
+  const [loading, setLoading] = useState(true);
   const [chartOption, setChartOption] = useState(getDefaultOption());
   useEffect(() => {
     const defaultOption = Object.assign({}, getDefaultOption());
@@ -146,7 +147,7 @@ function EChartComponent({
         silent: true,
       });
     }
-  }, [chartOption]);
+  }, [chartOption, loading]);
 
   const onRef = ref => {
     if (ref) {
@@ -157,17 +158,26 @@ function EChartComponent({
 
   return (
     <View style={styles.chartContainer}>
-      <ECharts option={chartOption} ref={onRef} onData={onData} />
+      <SafeAreaView
+        style={{height: loading ? 0 : 241}} // eslint-disable-line react-native/no-inline-styles
+      >
+        <ECharts
+          option={chartOption}
+          ref={onRef}
+          onData={onData}
+          backgroundColor="#3a3a3a"
+          onLoadEnd={() => setLoading(false)}
+        />
+      </SafeAreaView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   chartContainer: {
-    backgroundColor: '#ff00ff',
+    backgroundColor: '#3a3a3a',
     height: 240,
     margin: 10,
-    borderRadius: 4,
   },
 });
 

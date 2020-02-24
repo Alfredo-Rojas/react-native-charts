@@ -116,6 +116,7 @@ const styles = StyleSheet.create({
   },
   chartContainer: {
     width: '100%',
+    backgroundColor: '#3a3a3a',
   },
 });
 
