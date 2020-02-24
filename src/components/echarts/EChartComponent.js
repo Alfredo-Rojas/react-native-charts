@@ -159,14 +159,16 @@ function EChartComponent({
   return (
     <View style={styles.chartContainer}>
       <SafeAreaView
-        style={{height: loading ? 0 : 241}} // eslint-disable-line react-native/no-inline-styles
+        style={{opacity: loading ? 0 : 1, height: 240}} // eslint-disable-line react-native/no-inline-styles
       >
         <ECharts
           option={chartOption}
           ref={onRef}
           onData={onData}
           backgroundColor="#3a3a3a"
-          onLoadEnd={() => setLoading(false)}
+          onLoadEnd={() => {
+            setTimeout(() => setLoading(false), 100);
+          }}
         />
       </SafeAreaView>
     </View>
