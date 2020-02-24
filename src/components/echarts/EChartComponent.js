@@ -127,6 +127,11 @@ function EChartComponent({
       };
       defaultOption.series.push(markAreaSerie);
     }
+    // Get min of y axis dynamically
+    const concatedData = data.reduce((result, item) => result.concat(item), []);
+    const minValue = Math.min(...concatedData);
+    const yMin = minValue * 0.75;
+    defaultOption.yAxis.min = yMin;
     // if (chartRef) {
     //   chartRef.setOption(defaultOption);
     // }
